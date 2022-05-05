@@ -1,0 +1,18 @@
+{
+    "Address Server": {
+        "ip": "localhost",
+        "port": 10117
+    },
+    "Auth Server": {
+        "ip": "localhost",
+        "port": 12350
+    },
+    "Chat Server": {
+        "ip": "localhost",
+        "port": 12351
+    },
+    "Game Server": {
+        "ip": "localhost",
+        "port": 12352
+    }
+}

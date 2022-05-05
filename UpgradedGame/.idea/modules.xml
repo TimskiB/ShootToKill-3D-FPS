@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$USER_HOME$/OneDrive - Herzliya Schools/MyCloud/.idea/MyCloud.iml" filepath="$USER_HOME$/OneDrive - Herzliya Schools/MyCloud/.idea/MyCloud.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/OnlineGame.iml" filepath="$PROJECT_DIR$/.idea/OnlineGame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Example-Kivy-Apps/Purp (Chat App UI)/.idea/Purp (Chat App UI).iml" filepath="$PROJECT_DIR$/../Example-Kivy-Apps/Purp (Chat App UI)/.idea/Purp (Chat App UI).iml" />
+      <module fileurl="file://$USER_HOME$/OneDrive - Herzliya Schools/AddedFileUploader/.idea/TimsChatApp.iml" filepath="$USER_HOME$/OneDrive - Herzliya Schools/AddedFileUploader/.idea/TimsChatApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../akivymd/examples/full_example/.idea/full_example.iml" filepath="$PROJECT_DIR$/../../akivymd/examples/full_example/.idea/full_example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../python-port-forward/.idea/python-port-forward.iml" filepath="$PROJECT_DIR$/../../python-port-forward/.idea/python-port-forward.iml" />
+    </modules>
+  </component>
+</project>

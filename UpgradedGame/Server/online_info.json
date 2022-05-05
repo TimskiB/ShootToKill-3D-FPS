@@ -1,0 +1,14 @@
+{
+    "Auth Server": {
+        "ip": "8.tcp.ngrok.io",
+        "port": "14679"
+    },
+    "Chat Server": {
+        "ip": "8.tcp.ngrok.io",
+        "port": "11794"
+    },
+    "Game Server": {
+        "ip": "0.tcp.ngrok.io",
+        "port": "12876"
+    }
+}

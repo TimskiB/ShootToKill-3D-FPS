@@ -1,0 +1,789 @@
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+
+
+
+#        MDGridLayout:
+#            cols: 1
+#            adaptive_height: True
+#
+#            ItemForCustomBottomSheet:
+#                icon: "page-previous"
+#                text: "Preview"
+#
+#            ItemForCustomBottomSheet:
+#                icon: "exit-to-app"
+#                text: "Exit"
+<CustomDialog>
+    title:"User Options"
+
+<CustomOneLineIconListItem>
+
+    IconLeftWidget:
+        icon: 'account'
+
+<Lobby>
+    IconLeftWidget:
+        icon: 'account-group'
+
+<LobbyPlayer>
+    IconLeftWidget:
+        icon: 'account'
+
+<GameNotification@BoxLayout>
+    orientation: "vertical"
+    padding: dp(15)
+
+    MDLabel:
+        text: "Game Invite From a User"
+        id: game_invite_name
+        halign: "center"
+        valign: "center"
+        theme_text_color: "Custom"
+        text_color: app.theme_cls.primary_color
+
+    MDLabel:
+        text: "You were invited to a duel, will you accept it?"
+        theme_text_color: "Secondary"
+        font_style: "Caption"
+
+    MDBoxLayout:
+        orientation: 'horizontal'
+        rows: 1
+        cols: 3
+        MDFillRoundFlatButton:
+            id: reject_invite
+            text: "Reject"
+            #pos_hint: {"center_x": .5}
+            md_bg_color: .9, 0, 0, 1
+        Widget:
+            size_hint_y: None
+            width: "30dp"
+        MDFillRoundFlatButton:
+            id: accept_invite
+            text: "Accept"
+            #pos_hint: {"center_x": .5}
+            md_bg_color: 0, .7, 0, 1
+
+<MessageNotification@BoxLayout>
+    padding: dp(10)
+
+    MDLabel:
+        id: from_who
+        text: "1 New Message"
+        theme_text_color: "Secondary"
+        halign: "left"
+
+    MDIconButton:
+        id: button
+        icon: "subdirectory-arrow-right"
+        halign: "right"
+        valign: "center"
+
+<SuccessDialog@BoxLayout>:
+    orientation: "vertical"
+    padding: dp(40)
+
+    MDLabel:
+        text: "Successful!"
+        size_hint_y: None
+        height: self.texture_size[1]
+        halign: "center"
+        valign: "center"
+        bold: True
+        theme_text_color: "Custom"
+        text_color: 0, .7, 0, 1
+
+    MDLabel:
+        text: "You are now signed up in the app. Enjoy!"
+        halign: "center"
+        valign: "top"
+        theme_text_color: "Custom"
+        text_color: 0, .7, 0, 1
+        font_style: "Caption"
+
+    MDFillRoundFlatButton:
+        id: button
+        text: "Let's Go"
+        md_bg_color: 0, .7, 0, 1
+        pos_hint: {"center_x": .5}
+
+<ErrorDialog@BoxLayout>:
+    orientation: "vertical"
+    spacing: dp(10)
+    padding: dp(20)
+
+    MDLabel:
+        text: "Authentication Failed"
+        halign: "center"
+        theme_text_color: "Custom"
+        text_color: .9, 0, 0, 1
+
+    MDLabel:
+        text: "Login failed. Invalid username or password."
+        halign: "center"
+        theme_text_color: "Custom"
+        text_color: .9, 0, 0, 1
+        font_style: "Caption"
+
+    MDFillRoundFlatButton:
+        id: error_button
+        text: "Dismiss"
+        md_bg_color: .9, 0, 0, 1
+        pos_hint: {"center_x": .5}
+
+
+<ChatBubble>
+    adaptive_height: True
+    padding: [dp(8), dp(8)]
+    text_color: 1, 1, 1, 1
+    text_size: self.width, None
+
+    canvas.before:
+        Color:
+            rgba:
+                self.theme_cls.primary_dark if self.send_by_user \
+                else self.theme_cls.primary_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius:
+                [dp(8), dp(8), (dp(-5), dp(5)), dp(8)] if self.send_by_user \
+                else [(dp(-5), dp(5)), dp(8), dp(8), dp(8)]
+
+
+<On_active_button@Button_Item>
+    icon_color: app.theme_cls.text_color
+    text_color: app.theme_cls.text_color
+    button_bg_color: app.theme_cls.primary_color
+    mode: "color_on_active"
+    badge_disabled: True
+
+
+<ListItemWithOptions>:
+    on_size:
+        self.ids._right_container.width = container.width
+        self.ids._right_container.x = container.width
+
+    IconLeftWidget:
+        icon: 'account'
+
+    Options:
+        id: container
+        MDIconButton:
+            icon: 'chat'
+            on_press: app.enter_chat(self.parent.parent.parent.text)
+
+        MDIconButton:
+            on_release: app.confirm_invite(self.parent.parent.parent.text)
+            icon: 'gamepad-variant'
+
+
+
+
+Screen:
+    ScreenManager:
+        id: screen_manager
+# HOST SCREEN
+        Screen:
+            on_enter: app.check_connection()
+            name: 'login screen'
+            FloatLayout:
+
+                MDCard:
+                    border_radius: 20
+                    radius: [15]
+                    orientation: "vertical"
+                    padding: "35dp"
+                    size_hint: None, None
+                    size: "370dp", "280dp"
+                    pos_hint: {"center_x": .5, "center_y": .5}
+                    FloatLayout:
+                        orientation: 'vertical'
+                        halign: 'center'
+
+                        MDLabel:
+                            pos_hint: {"center_y": .95, "center_x": .5}
+                            text:'Welcome Back'
+                            text_color: 46/255, 49/255, 67/255, 1
+                            font_size: '25dp'
+                            halign: 'center'
+                        MDLabel:
+                            pos_hint: {"center_y": .80, "center_x": .5}
+                            text: "Enter your credentials and jump into action!"
+                            halign: 'center'
+                            theme_text_color: "Secondary"
+                            font_size: '12dp'
+                        MDTextField:
+                            pos_hint: {"center_y": .55, "center_x": .5}
+                            hint_text: "Enter your username"
+                            id: username_input
+                            mode: "rectangle"
+                            icon_right: "account"
+                            current_hint_text_color: (120/255, 137/255, 164/255, 1)
+                            line_color_normal: (120/255, 137/255, 164/255, 0.1)
+                            icon_right_color:  (38/255, 98/255, 255/255, 1)
+                        MDTextField:
+                            id: password_input
+                            pos_hint: {"center_y": .29, "center_x": .5}
+                            line_color_normal: (120/255, 137/255, 164/255, 0.1)
+                            current_hint_text_color: (120/255, 137/255, 164/255, 1)
+                            hint_text: "Enter your password"
+                            password: True
+                            mode: "rectangle"
+                            icon_right: "lock"
+                            icon_right_color:  (38/255, 98/255, 255/255, 1)
+
+                        MDRaisedButton:
+                            text: "Sign In"
+                            border_radius: 20
+                            radius: [15]
+                            size: "30dp", "5dp"
+                            pos_hint: {"center_y": .001, "center_x": .5}
+                            text_color: 1, 1, 1, 1
+                            md_bg_color: 38/255, 98/255, 255/255, 1
+                            on_press: app.perform_auth(username_input.text, password_input.text )
+#
+#                AKSpinnerDoubleBounce:
+#                    id: doublebounce
+#                    spinner_size: dp(25)
+#                    active: False
+#                    pos_hint: {"center_x": .5, "center_y": .25}
+
+                MDRaisedButton:
+                    text: "Don't have an account yet? Create One"
+                    border_radius: 20
+                    font_size: '14dp'
+                    theme_text_color: "Secondary"
+                    radius: [15]
+                    size: "20dp", "10dp"
+                    pos_hint: {"center_y": .2, "center_x": .5}
+                    text_color: 0, 0, 0, 1
+                    md_bg_color: 0, 0, 0, 0
+                    on_press: app.change_screen("sign up screen")
+
+        Screen:
+            name: 'sign up screen'
+            FloatLayout:
+                MDCard:
+                    border_radius: 20
+                    radius: [15]
+                    orientation: "vertical"
+                    padding: "35dp"
+                    size_hint: None, None
+                    size: "370dp", "370dp"
+                    pos_hint: {"center_x": .5, "center_y": .52}
+                    FloatLayout:
+                        orientation: 'vertical'
+                        halign: 'center'
+                        MDLabel:
+                            pos_hint: {"center_y": .95, "center_x": .5}
+                            text:'Create Account'
+                            text_color: 46/255, 49/255, 67/255, 1
+                            font_size: '25dp'
+                            halign: 'center'
+                        MDLabel:
+                            pos_hint: {"center_y": .80, "center_x": .5}
+                            text: "Choose your username and create your password"
+                            halign: 'center'
+                            theme_text_color: "Secondary"
+                            font_size: '12dp'
+                        MDTextField:
+
+                            pos_hint: {"center_y": .60, "center_x": .5}
+                            hint_text: "Choose your username"
+                            id: create_username
+                            mode: "rectangle"
+                            icon_right: "account"
+                            current_hint_text_color: (120/255, 137/255, 164/255, 1)
+                            line_color_normal: (120/255, 137/255, 164/255, 0.1)
+                            icon_right_color:  (38/255, 98/255, 255/255, 1)
+                        MDTextField:
+                            id: create_password
+                            pos_hint: {"center_y": .42, "center_x": .5}
+                            line_color_normal: (120/255, 137/255, 164/255, 0.1)
+                            current_hint_text_color: (120/255, 137/255, 164/255, 1)
+                            hint_text: "Choose your password"
+                            mode: "rectangle"
+                            password: True
+                            icon_right: "lock"
+                            icon_right_color:  (38/255, 98/255, 255/255, 1)
+
+                        MDTextField:
+                            id: confirm_password
+                            pos_hint: {"center_y": .24, "center_x": .5}
+                            line_color_normal: (120/255, 137/255, 164/255, 0.1)
+                            current_hint_text_color: (120/255, 137/255, 164/255, 1)
+                            hint_text: "Confirm your password"
+                            mode: "rectangle"
+                            password: True
+                            icon_right: "lock"
+                            icon_right_color:  (38/255, 98/255, 255/255, 1)
+
+
+
+
+
+
+                        MDRaisedButton:
+                            text: "Sign Up"
+                            border_radius: 20
+                            radius: [15]
+                            size: "30dp", "5dp"
+                            pos_hint: {"center_y": .001, "center_x": .5}
+                            text_color: 1, 1, 1, 1
+                            md_bg_color: 38/255, 98/255, 255/255, 1
+                            on_press: app.register_user()
+
+
+                MDRaisedButton:
+                    text: "Already have an account? Sign In"
+                    border_radius: 20
+                    font_size: '14dp'
+                    theme_text_color: "Secondary"
+                    radius: [15]
+                    size: "20dp", "10dp"
+                    pos_hint: {"center_y": .10, "center_x": .5}
+                    text_color: 0, 0, 0, 1
+                    md_bg_color: 0, 0, 0, 0
+                    on_press: app.change_screen("login screen", "back")
+
+        Screen:
+            name: 'home screen'
+
+            FloatLayout:
+                ScreenManager:
+                    transition:
+                    pos_hint: {"center_y": .50}
+                    id: page_manager
+                    MDScreen:
+                        name: 'home page'
+                        FloatLayout:
+                            pos_hint:
+                            orientation: "vertical"
+                            MDToolbar:
+                                elevation: 0
+                                icon_color: 0, 0, 0, 0
+                                md_bg_color: app.theme_cls.primary_color
+                                #get_color_from_hex("fafafa")
+
+                                pos_hint: {'top': True}
+                                right_action_items: [["account-search-outline", lambda x: app.enter_search_screen()]]
+
+
+                            MDGridLayout:
+                                padding: [10, 10, 10, 60]
+                                spacing: "10dp"
+                                cols: 1
+                                pos_hint: {'center_y':0.4}
+
+                                Widget:
+                                    size_hint_y: None
+                                    height: "1dp"
+
+                                MDLabel:
+                                    text: f"Welcome {app.username}"
+                                    id: user_header
+                                    halign: 'left'
+                                    #theme_style: "H1"
+                                    font_size: '36dp'
+                                    font_family: "Lexend"
+                                    adaptive_height: True
+
+                                Widget:
+                                    size_hint_y: None
+                                    height: "15dp"
+
+                                MDLabel:
+                                    text: "Online Players:"
+                                    font_style: "Button"
+                                    adaptive_height: True
+
+                                MDSeparator:
+
+                                Widget:
+                                    size_hint_y: None
+                                    height: "1dp"
+
+                                ScrollView:
+                                    size_hint: 0.8, 1
+                                    MDList:
+                                        id: online_users
+                                        OneLineAvatarIconListItem
+                                            id: example_user
+                                            text: "Example"
+                                            on_size:
+                                                self.ids._right_container.width = container.width
+                                                self.ids._right_container.x = container.width
+
+                                            IconLeftWidget:
+                                                icon: 'account'
+
+                                            Options:
+                                                id: container
+                                                MDIconButton:
+                                                    id: example_chat
+                                                    icon: 'chat'
+                                                    on_press: app.change_screen("chat screen")
+
+                                                MDIconButton:
+                                                    id: example_invite
+                                                    icon: 'gamepad-variant'
+                                                    on_release: app.confirm_invite(self.parent.parent.parent.text)
+
+
+
+
+
+
+
+                    MDScreen:
+                        name: 'lobbies page'
+                        FloatLayout:
+                            pos_hint:
+                            orientation: "vertical"
+#                            MDToolbar:
+#                                elevation: 0
+#                                md_bg_color: 0, 0, 0, 0
+#                                pos_hint: {'top': True}
+
+                            MDGridLayout:
+                                padding: [10, 10, 10, 60]
+                                spacing: "10dp"
+                                cols: 1
+                                pos_hint: {'center_y':0.4}
+
+                                Widget:
+                                    size_hint_y: None
+                                    height: "5dp"
+
+                                MDLabel:
+                                    text: f"Lobbies"
+                                    halign: 'left'
+                                    #theme_style: "H1"
+                                    font_size: '36dp'
+                                    font_family: "Lexend"
+                                    adaptive_height: True
+
+                                Widget:
+                                    size_hint_y: None
+                                    height: "20dp"
+
+#                                MDLabel:
+#                                    text: "Online Players:"
+#                                    font_style: "Button"
+#                                    adaptive_height: True
+
+                                MDSeparator:
+
+                                Widget:
+                                    size_hint_y: None
+                                    height: "1dp"
+
+                                ScrollView:
+                                    size_hint: 0.8, 1
+                                    GridLayout:
+                                        cols: 1
+                                        size_hint_y: None
+                                        height: self.minimum_height
+                                        id: lobbies_list
+                            MDFloatingActionButton:
+                                icon: "plus"
+                                on_release: app.create_lobby_screen()
+                                md_bg_color: app.theme_cls.primary_color
+                                pos_hint: {'center_x':0.92, 'center_y': 0.15}
+#
+                    MDScreen:
+                        name: 'settings page'
+
+                AKBottomNavigation2:
+                    bg_color: app.theme_cls.bg_darkest
+                    Button_Item:
+                        text: "Home"
+                        icon: "home"
+                        #icon_color: .3, .2, .3, 1
+                        text_color: 0, 0, 0, 1
+                        #button_bg_color: .7, .5, .7, 1
+                        badge_text: "0"
+                        id: users_badge
+                        on_press: app.change_page("home page")
+                    Button_Item:
+                        text: "Lobbies"
+                        badge_text: "0"
+                        icon: "account-group"
+                        #icon_color: .2, .2, .6, 1
+                        text_color: 0, 0, 0, 1
+                        id: lobby_badge
+                        #button_bg_color: .6, .6, 1, 1
+                        on_press: app.change_page("lobbies page")
+#                    Button_Item:
+#                        text: "Settings"
+#                        icon: "cog"
+#                        #icon_color: .8, 0, 0, 1
+#                        text_color: 0, 0, 0, 1
+#                        #button_bg_color: 1, .6, .6, 1
+#                        badge_disabled: True
+#                        on_press: app.change_page("settings page")
+        Screen:
+            name: "chat screen"
+            MDBoxLayout:
+                orientation: "vertical"
+
+                MDToolbar:
+                    id: chat_name
+                    title: "Chat Screen"
+                    left_action_items: [["arrow-left", lambda x: app.back_home_screen()]]
+                    #on_title_press: root.show_user_info()
+
+                RecycleView:
+                    id: chat_rv
+                    data: app.chat_logs
+                    viewclass: "ChatBubble"
+
+                    RecycleBoxLayout:
+                        id: box
+                        padding: dp(10)
+                        spacing: dp(15)
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_size[1]
+                        default_size_hint: .8, None
+                        default_size: None, None
+
+                TextInput:
+                    id: field
+                    hint_text: "Write your message"
+                    multiline: True
+                    font_name: "Lexend"
+                    cursor_color: app.theme_cls.primary_color
+                    padding: dp(7)
+                    size_hint_y: None
+                    height: dp(55)
+                    background_active: "assets/images/transparent.png"
+                    background_normal: "assets/images/transparent.png"
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.5, 0.5, 0.5, 0.5
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Color:
+                            rgba:
+                                self.foreground_color if self.text \
+                                else (0.5, 0.5, 0.5, 0.5)
+
+            MDIconButton:
+                icon: "send"
+#                font_size: sp(55)
+                user_font_size: "36sp"
+                pos_hint: {"center_x": .9}
+                y: dp(55)-(self.width/2)
+                on_release: app.send_message(field.text.strip())
+
+#            MDIconButton:
+#                icon: "chevrons-down"
+#                font_size: sp(20)
+#                mode: "outlined"
+#                pos_hint: {"center_x": .9}
+#                y: dp(55)+(self.width)
+#                #opacity: 1 if self.show else 0
+#                #disabled: False if self.show else True
+#                #on_release: root.scrt
+
+        Screen:
+            name: 'invite screen'
+            MDBoxLayout:
+                orientation: "vertical"
+
+                MDToolbar:
+                    id: invite_name
+                    title: "error"
+                    left_action_items: [["arrow-left", lambda x: app.change_screen("home screen", "back")]]
+                    #on_title_press: root.show_user_info()
+
+                MDFloatLayout:
+#
+#                    MDLabel:
+#                        id: invite_name
+#                        pos_hint: {'center_y':0.7, 'center_x':0.5}
+#                        text:'error'
+#                        font_style: 'H3'
+#                        font_size: "36dp"
+
+                    AKSpinnerThreeDots:
+                        id: three_dots
+                        spinner_size: dp(20)
+                        pos_hint: {'center_y':0.5, 'center_x':0.5}
+
+        Screen:
+            name: 'create lobby screen'
+            FloatLayout:
+                orientation: "vertical"
+                MDToolbar:
+                    elevation: 10
+                    title: 'Create a New Lobby:'
+                    pos_hint: {'top': True}
+
+                    left_action_items : [['arrow-left', lambda x: app.change_screen("home screen")]]
+
+
+                GridLayout:
+                    padding: "10dp"
+                    spacing: "10dp"
+                    cols: 1
+                    #pos_hint: {'center_y': .8}
+                    pos_hint: {'center_y':0.4}
+
+                    Widget:
+                        size_hint_y: None
+                        height: "5dp"
+
+                    MDTextField:
+                        id: lobby_input_name
+                        required: True
+                        hint_text: "Enter lobby name:"
+                        helper_text: "Choose a cool name for your lobby"
+                        helper_text_mode: "on_focus"
+
+                    Widget:
+                        size_hint_y: None
+                        height: "5dp"
+
+                    MDTextField:
+                        id: max_input_players
+                        required: True
+                        hint_text: "Enter max players:"
+                        helper_text: "Recommended 10..."
+                        helper_text_mode: "on_focus"
+
+                MDFillRoundFlatButton:
+                    text: "Create Lobby"
+                    font_size: '20dp'
+                    on_release: app.create_new_lobby()
+                    pos_hint : {'center_x':0.5, 'center_y':0.2}
+#
+
+
+        Screen:
+            name: 'lobby screen'
+
+            RelativeLayout:
+                orientation: "vertical"
+                halign: 'center'
+                MDToolbar:
+                    id: lobby_name
+                    pos_hint: {'top': True}
+                    anchor_title: "center"
+                    left_action_items: [["arrow-left", lambda x: app.change_screen("home screen", "back")]]
+                    title: 'Anonymous Group:'
+                BoxLayout:
+                    padding: [10,1,10,5]
+                    orientation: "vertical"
+                    pos_hint: {'center_y': .5}
+                    rows: 6
+                    cols: 1
+
+                    BoxLayout:
+                        pos_hint: {'center_x':0.5, 'center_y':0.80}
+                        rows: 1
+                        halign: 'center'
+                        cols: 3
+
+                        MDFillRoundFlatButton:
+                            text: "Join"
+                            halign: 'center'
+                            on_press: app.join_lobby()
+                            id: join_button
+                            md_bg_color: 0, .7, 0, 1
+                        Widget:
+                            size_hint_x: None
+                            width: '50dp'
+                        MDFillRoundFlatButton:
+                            text: "Spectate"
+                            halign: 'center'
+                            on_press: app.spectate_lobby()
+                            md_bg_color: get_color_from_hex("78909c")
+#                    AKCircularProgress:
+#                        id: progress_relative
+#                        pos_hint: {'center_x':0.5, 'center_y':0.75}
+#                        size_hint: None, None
+#                        size: dp(60), dp(60)
+#                        percent_type: "percent"
+#                        start_deg: 240
+#                        halign: 'center'
+#                        end_deg: 480
+#                        percent_type: "relative"
+#                        max_percent: 15 # The max players in the lobby
+#                        current_percent: 5 # Current player/max players
+                    MDLabel:
+                        text: "Limit: 2/3"
+                        id: limit
+                        pos_hint: {'center_x':0.5, 'center_y':0.60}
+                        font_style: "Button"
+                        halign: 'center'
+
+                    MDLabel:
+                        pos_hint: {'center_x':0.5, 'center_y':0.57}
+                        id: lobby_creator
+                        halign: 'center'
+                        text: "Creator: unknown"
+                        font_style: "Button"
+#                    Widget:
+#                        size_hint_y: None
+#                        height: "1dp"
+
+#                    MDLabel:
+#                        text: "Player Limit:"
+#                        font_style: "Button"
+
+
+#                    Widget:
+#                        size_hint_y: None
+#                        height: "5dp"
+
+                    MDLabel:
+                        pos_hint: {'center_x':0.5, 'center_y':0.55}
+                        text: "Connected Players:"
+                        font_style: "Button"
+#                        halign: 'center'
+#                        pos_hint: {'x_center':0.5}
+                        adaptive_height: True
+                    ScrollView:
+                        pos_hint: {'center_x':0.5, 'center_y':0.3}
+                        MDList:
+                            id: lobby_players
+        Screen:
+            name: "search screen"
+            MDBoxLayout:
+                orientation: 'vertical'
+                spacing: dp(10)
+                #padding: dp(20)
+                MDToolbar:
+                    title: "Search User"
+                    pos_hint: {'top': True}
+                    icon_color: 0, 0, 0, 0
+                    md_bg_color: app.theme_cls.primary_color
+                    left_action_items: [["arrow-left", lambda x: app.change_screen("home screen", "back")]]
+
+                MDBoxLayout:
+                    adaptive_height: True
+
+                    MDIconButton:
+                        icon: 'magnify'
+
+                    MDTextField:
+                        id: search_field
+                        hint_text: 'Search user'
+                        on_text: app.set_list_users(self.text, True)
+                RecycleView:
+                    id: rv
+                    key_viewclass: 'viewclass'
+                    key_size: 'height'
+
+                    RecycleBoxLayout:
+                        padding: dp(10)
+                        default_size: None, dp(48)
+                        default_size_hint: 1, None
+                        size_hint_y: None
+                        height: self.minimum_height
+                        orientation: 'vertical'
